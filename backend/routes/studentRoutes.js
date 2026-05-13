@@ -143,7 +143,7 @@ router.post("/add-money", auth, async (req, res) => {
 // ✅ GET VENDORS (with category)
 router.get("/vendors", auth, async (req, res) => {
   try {
-    const { category } = req.query
+    const { category } = req.query 
 
     const where = { role: "vendor" }
 
