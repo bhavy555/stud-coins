@@ -1,5 +1,5 @@
 // const BASE_URL = "http://localhost:5000/api"
-const BASE_URL = "http://10.67.40.45:5000/api"
+const BASE_URL = "http://10.76.202.45:5000/api"
 
 // 🔐 get token safely
 const getToken = () => {

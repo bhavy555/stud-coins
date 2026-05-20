@@ -11,7 +11,7 @@ const [password, setPassword] = useState("")
   const handleLogin = async () => {
     try {
       // const res = await fetch("http://localhost:5000/login", {
-      const res = await fetch("http://10.67.40.45:5000/login", {
+      const res = await fetch("http://10.76.202.45:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
