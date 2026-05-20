@@ -17,7 +17,7 @@ function Pay() {
     useEffect(() => {
         const fetchVendor = async () => {
             try {
-                const data = await getData("/student/vendors")
+                const data = await getData("/user/vendors")
                 const vendor = data?.vendors?.find(
                     v => v.id === Number(vendorId)
                 )
@@ -41,12 +41,18 @@ function Pay() {
         try {
             setLoading(true)
 
-            const res = await postData("/student/pay", {
+            const res = await postData("/user/pay", {
                 amount: Number(amount),
                 vendorId
             })
 
-            if (res?.message) {
+            if (res?.error) {
+                toast.error(res.error)
+                return
+            }
+
+            if (res?.message === "Payment successful") {
+
                 toast.success(`Paid ₹${amount} to ${vendorName}`)
 
                 navigate("/success", {
@@ -56,8 +62,9 @@ function Pay() {
                         vendorName
                     }
                 })
+
             } else {
-                toast.error("Payment failed")
+                toast.error(res?.message || "Payment failed")
             }
 
         } catch (err) {

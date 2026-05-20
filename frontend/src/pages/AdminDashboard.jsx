@@ -20,7 +20,7 @@ function AdminDashboard() {
   const navigate = useNavigate()
 
   const [stats, setStats] = useState({
-    students: 0,
+    users: 0,
     teachers: 0,
     vendors: 0,
     revenue: 0
@@ -42,7 +42,7 @@ function AdminDashboard() {
         const data = await getData("/admin/stats", token)
 
         setStats({
-          students: data.students || 0,
+          users: data.users || 0,
           teachers: data.teachers || 0,
           vendors: data.vendors || 0,
           revenue: data.revenue || 0
@@ -56,7 +56,7 @@ function AdminDashboard() {
 
         // fallback (your original style)
         setStats({
-          students: 1245,
+          users: 1245,
           teachers: 34,
           vendors: 18,
           revenue: 240000
@@ -114,8 +114,8 @@ function AdminDashboard() {
 
           <div className="bg-white p-4 rounded-xl shadow flex justify-between">
             <div>
-              <p className="text-sm text-gray-500">Students</p>
-              <h3 className="text-xl font-bold">{loading ? "..." : stats.students}</h3>
+              <p className="text-sm text-gray-500">Users</p>
+              <h3 className="text-xl font-bold">{loading ? "..." : stats.users}</h3>
             </div>
             <Users />
           </div>

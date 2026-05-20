@@ -25,8 +25,8 @@ function TeacherDashboard() {
         const statsData = await getData("/teacher/stats", token)
 
         setStats([
-          { title: "Students Created", value: statsData.totalStudents || 0, icon: <Users size={24}/> },
-          { title: "Active Students", value: statsData.activeStudents || 0, icon: <ClipboardList size={24}/> }
+          { title: "Users Created", value: statsData.totalUsers || 0, icon: <Users size={24}/> },
+          { title: "Active Users", value: statsData.activeUsers || 0, icon: <ClipboardList size={24}/> }
         ])
 
         // 🔹 Fetch activity
@@ -39,7 +39,7 @@ function TeacherDashboard() {
 
         // fallback (so UI never breaks)
         setActivity([
-          "Created 10 new students",
+          "Created 10 new users",
           "Generated class key",
           "Wallet activated"
         ])
@@ -58,7 +58,7 @@ function TeacherDashboard() {
       <div className="bg-blue-700 text-white p-4 flex justify-between items-center">
         <div>
           <h1 className="text-lg font-semibold">Hi, Teacher 👋</h1>
-          <p className="text-xs opacity-80">Manage your students</p>
+          <p className="text-xs opacity-80">Manage your users</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ function TeacherDashboard() {
         <div className="grid grid-cols-2 gap-4">
 
           <button className="bg-white rounded-xl shadow p-4 flex flex-col items-center gap-2">
-            <PlusCircle size={22}/> Create Student
+            <PlusCircle size={22}/> Create User
           </button>
 
           <button className="bg-white rounded-xl shadow p-4 flex flex-col items-center gap-2">
@@ -99,7 +99,7 @@ function TeacherDashboard() {
           </button>
 
           <button className="bg-white rounded-xl shadow p-4 flex flex-col items-center gap-2">
-            <Users size={22}/> View Students
+            <Users size={22}/> View Users
           </button>
 
           <button className="bg-white rounded-xl shadow p-4 flex flex-col items-center gap-2">
@@ -125,7 +125,7 @@ function TeacherDashboard() {
       {/* BOTTOM NAV */}
       <div className="fixed bottom-0 w-full bg-white border-t flex justify-around p-3 text-xs">
         <div className="text-blue-700 font-semibold">Home</div>
-        <div>Students</div>
+        <div>Users</div>
         <div>Activity</div>
         <div>Profile</div>
       </div>

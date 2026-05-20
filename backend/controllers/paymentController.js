@@ -4,16 +4,16 @@ import { User, Wallet, Log } from "../models/index.js"
 export const payToVendor = async (req, res) => {
   try {
     const { vendorId, amount } = req.body
-    const studentId = req.user.id
+    const userId = req.user.id
 
     console.log("REQ.USER:", req.user)
-    console.log("Payment request:", { vendorId, studentId, amount })
+    console.log("Payment request:", { vendorId, userId, amount })
 
     // ✅ FETCH USERS
-    const studentUser = await User.findByPk(studentId)
+    const userUser = await User.findByPk(userId)
     const vendorUser = await User.findByPk(vendorId)
 
-    console.log("STUDENT:", studentUser?.role)
+    console.log("USER:", userUser?.role)
     console.log("VENDOR:", vendorUser?.role)
 
     // ✅ VALIDATIONS
@@ -21,8 +21,8 @@ export const payToVendor = async (req, res) => {
       return res.status(400).json({ message: "Invalid amount" })
     }
 
-    if (!studentUser) {
-      return res.status(404).json({ message: "Student not found" })
+    if (!userUser) {
+      return res.status(404).json({ message: "User not found" })
     }
 
     if (!vendorUser) {
@@ -30,9 +30,9 @@ export const payToVendor = async (req, res) => {
     }
 
     // ✅ ROLE CHECK (IMPORTANT)
-    if (studentUser.role !== "student") {
-      console.log("❌ Wrong student role:", studentUser.role)
-      return res.status(403).json({ message: "Only students can pay" })
+    if (userUser.role !== "user") {
+      console.log("❌ Wrong user role:", userUser.role)
+      return res.status(403).json({ message: "Only users can pay" })
     }
 
     if (vendorUser.role !== "vendor") {
@@ -40,15 +40,15 @@ export const payToVendor = async (req, res) => {
       return res.status(403).json({ message: "Can only pay to vendors" })
     }
 
-    // ✅ GET OR CREATE STUDENT WALLET
-    let studentWallet = await Wallet.findOne({
-      where: { UserId: studentId }
+    // ✅ GET OR CREATE USER WALLET
+    let userWallet = await Wallet.findOne({
+      where: { UserId: userId }
     })
 
-    if (!studentWallet) {
-      console.log("⚠️ Creating student wallet...")
-      studentWallet = await Wallet.create({
-        UserId: studentId,
+    if (!userWallet) {
+      console.log("⚠️ Creating user wallet...")
+      userWallet = await Wallet.create({
+        UserId: userId,
         balance: 0
       })
     }
@@ -67,15 +67,15 @@ export const payToVendor = async (req, res) => {
     }
 
     // ✅ BALANCE CHECK
-    if (studentWallet.balance < amount) {
+    if (userWallet.balance < amount) {
       return res.status(400).json({ message: "Insufficient balance" })
     }
 
     // 💸 TRANSACTION
-    studentWallet.balance -= Number(amount)
+    userWallet.balance -= Number(amount)
     vendorWallet.balance += Number(amount)
 
-    await studentWallet.save()
+    await userWallet.save()
     await vendorWallet.save()
 
     await Log.create({
@@ -86,7 +86,7 @@ export const payToVendor = async (req, res) => {
 
     // 🧾 SAVE TRANSACTION
     const tx = await Transaction.create({
-      from: studentId,
+      from: userId,
       to: vendorId,
       amount
     })
@@ -94,7 +94,7 @@ export const payToVendor = async (req, res) => {
     return res.json({
       message: "Payment successful",
       transaction: tx,
-      balance: studentWallet.balance
+      balance: userWallet.balance
     })
 
   } catch (err) {

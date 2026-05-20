@@ -8,13 +8,13 @@ function PaymentSuccess() {
     useEffect(() => {
         // block direct access
         if (!location.state?.paid) {
-            navigate("/student")
+            navigate("/user")
             return
         }
 
         // ✅ auto redirect after 2 seconds
         const timer = setTimeout(() => {
-            navigate("/student")
+            navigate("/user")
         }, 2000)
 
         return () => clearTimeout(timer)

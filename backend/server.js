@@ -15,13 +15,17 @@ import authRoutes from "./routes/authRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 
 // ✅ ROUTES
-import studentRoutes from "./routes/studentRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 import vendorRoutes from "./routes/vendorRoutes.js"
 
 
 const app = express()
 
 app.use(cors())
+// app.use(cors({
+//   origin: true,
+//   credentials: true
+// }))
 app.use(express.json())
 
 const SECRET = process.env.JWT_SECRET
@@ -36,7 +40,10 @@ const SECRET = process.env.JWT_SECRET
 
     console.log("Tables synced")
 
-    app.listen(5000, () => {
+    // app.listen(5000, () => {
+    //   console.log("Server running on port 5000")
+    // })
+    app.listen(5000, "0.0.0.0", () => {
       console.log("Server running on port 5000")
     })
 
@@ -94,7 +101,7 @@ app.post("/login", async (req, res) => {
 
 
 // ================= ROUTES =================
-app.use("/api/student", studentRoutes)
+app.use("/api/user", userRoutes)
 app.use("/api/auth", authRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/vendor", vendorRoutes)

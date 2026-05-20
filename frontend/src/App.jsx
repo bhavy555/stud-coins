@@ -5,7 +5,7 @@ import ManageUsers from "./pages/ManageUsers"
 import Login from "./pages/Login"
 import AdminDashboard from "./pages/AdminDashboard"
 import AdminLogs from "./pages/AdminLogs"
-import StudentDashboard from "./pages/StudentDashboard"
+import UserDashboard from "./pages/UserDashboard"
 import TeacherDashboard from "./pages/TeacherDashboard"
 import VendorDashboard from "./pages/VendorDashboard"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -32,9 +32,9 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="/student" element={
-          <ProtectedRoute allowedRole="student">
-            <StudentDashboard />
+        <Route path="/user" element={
+          <ProtectedRoute allowedRole="user">
+            <UserDashboard />
           </ProtectedRoute>
         } />
 
@@ -109,7 +109,7 @@ function App() {
 
         <Route path="/scan"
             element={
-              <ProtectedRoute allowedRole="student">
+              <ProtectedRoute allowedRole="user">
                 <Scan />
               </ProtectedRoute>
             }
@@ -117,7 +117,7 @@ function App() {
 
         <Route path="/pay"
           element={
-            <ProtectedRoute allowedRole="student">
+            <ProtectedRoute allowedRole="user">
               <Pay />
             </ProtectedRoute>
           }
@@ -125,7 +125,7 @@ function App() {
 
         <Route path="/success"
           element={
-            <ProtectedRoute allowedRole="student">
+            <ProtectedRoute allowedRole="user">
               <PaymentSuccess />
             </ProtectedRoute>
           }

@@ -8,7 +8,7 @@ function Signup() {
   const [form, setForm] = useState({
     username: "",
     password: "",
-    role: "student",
+    role: "user",
     secretKey: "",
     category: "",
     shopName: "",
@@ -76,7 +76,7 @@ function Signup() {
           className="w-full p-2 border rounded"
           onChange={handleChange}
         >
-          <option value="student">Student</option>
+          <option value="user">User</option>
           <option value="vendor">Vendor</option>
         </select>
 
@@ -138,8 +138,8 @@ function Signup() {
         />
 
 
-        {/* STUDENT KEYS */}
-        {form.role === "student" && (
+        {/* USER KEYS */}
+        {form.role === "user" && (
           <>
             <input
               name="privateKey"

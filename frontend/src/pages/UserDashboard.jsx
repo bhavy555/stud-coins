@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react"
 import { getData, postData } from "../api/api"
 
-function StudentDashboard() {
+function UserDashboard() {
 
   const navigate = useNavigate()
 
@@ -26,7 +26,7 @@ function StudentDashboard() {
 
   // WALLET
   const fetchWallet = async () => {
-    const data = await getData("/student/wallet")
+    const data = await getData("/user/wallet")
     setWallet(data?.balance || 0)
   }
 
@@ -34,7 +34,7 @@ function StudentDashboard() {
   const handleAddMoney = async () => {
     if (!addAmount || addAmount <= 0) return alert("Enter valid amount")
 
-    const res = await postData("/student/add-money", {
+    const res = await postData("/user/add-money", {
       amount: Number(addAmount)
     })
 
@@ -47,7 +47,7 @@ function StudentDashboard() {
   const handlePay = async () => {
     if (!payAmount || payAmount <= 0) return alert("Enter valid amount")
 
-    const res = await postData("/student/pay", {
+    const res = await postData("/user/pay", {
       amount: Number(payAmount),
       vendorId: selectedVendor
     })
@@ -59,7 +59,7 @@ function StudentDashboard() {
 
     fetchWallet()
 
-    const txData = await getData("/student/transactions")
+    const txData = await getData("/user/transactions")
     setTransactions(txData.transactions || [])
   }
 
@@ -69,14 +69,14 @@ function StudentDashboard() {
       try {
         await fetchWallet()
 
-        const offersData = await getData("/student/offers")
+        const offersData = await getData("/user/offers")
         setOffers(offersData?.offers || [])
 
-        const vendorData = await getData("/student/vendors")
+        const vendorData = await getData("/user/vendors")
         console.log("RAW VENDORS FROM API:", vendorData)
         setVendors(vendorData?.vendors || [])
 
-        const txData = await getData("/student/transactions")
+        const txData = await getData("/user/transactions")
         setTransactions(txData?.transactions || [])
 
       } catch (err) {
@@ -122,7 +122,7 @@ function StudentDashboard() {
       <div className="bg-blue-700 text-white p-4 flex justify-between items-center rounded-b-2xl">
 
         <div>
-          <h1 className="text-lg font-semibold">Hi, Student 👋</h1>
+          <h1 className="text-lg font-semibold">Hi, User 👋</h1>
           <p className="text-xs opacity-80">Welcome back</p>
         </div>
 
@@ -301,4 +301,4 @@ function StudentDashboard() {
   )
 }
 
-export default StudentDashboard
+export default UserDashboard

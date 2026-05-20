@@ -10,7 +10,7 @@ function VendorReceive() {
 
             <div className="mt-4 flex flex-col items-center">
                 <QRCodeSVG
-                    value={`http://localhost:5173/pay?userId=${userId}`}
+                    value={`${window.location.origin}/pay?userId=${userId}`}
                     size={180}
                 />
 

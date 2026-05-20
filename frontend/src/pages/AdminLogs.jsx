@@ -77,7 +77,7 @@ function AdminLogs() {
                         className="border p-1 rounded"
                     >
                         <option value="">All Roles</option>
-                        <option value="student">Student</option>
+                        <option value="user">User</option>
                         <option value="teacher">Teacher</option>
                         <option value="vendor">Vendor</option>
                         <option value="admin">Admin</option>

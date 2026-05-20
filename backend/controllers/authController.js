@@ -10,7 +10,7 @@ export const createApprovalRequest  = async (req, res) => {
       return res.status(400).json({ message: "Missing fields" })
     }
 
-    if (!["teacher", "vendor", "student"].includes(role)) {
+    if (!["teacher", "vendor", "user"].includes(role)) {
       return res.status(400).json({ message: "Invalid role" })
     }
 

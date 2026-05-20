@@ -95,7 +95,7 @@ function ManageUsers() {
                                     value={form.role}
                                     onChange={(e) => setForm({ ...form, role: e.target.value })}
                                 >
-                                    <option value="student">student</option>
+                                    <option value="user">user</option>
                                     <option value="teacher">teacher</option>
                                     <option value="vendor">vendor</option>
                                     <option value="admin">admin</option>

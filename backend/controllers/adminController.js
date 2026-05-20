@@ -8,7 +8,7 @@ import { logAction } from "../utils/logAction.js"
 
 export const getAdminStats = async (req, res) => {
   try {
-    const students = await User.count({ where: { role: "student" } })
+    const users = await User.count({ where: { role: "user" } })
     const teachers = await User.count({ where: { role: "teacher" } })
     const vendors = await User.count({ where: { role: "vendor" } })
 
@@ -17,7 +17,7 @@ export const getAdminStats = async (req, res) => {
     const revenue = wallets.reduce((sum, w) => sum + w.balance, 0)
 
     res.json({
-      students,
+      users,
       teachers,
       vendors,
       revenue
