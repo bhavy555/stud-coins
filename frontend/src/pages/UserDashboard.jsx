@@ -20,6 +20,8 @@ function UserDashboard() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [showHistory, setShowHistory] = useState(false)
   const [showOffers, setShowOffers] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
+  const [profilePhoto, setProfilePhoto] = useState("")
 
   const handleLogout = () => {
     localStorage.clear()
@@ -81,11 +83,18 @@ function UserDashboard() {
         setOffers(offersData?.offers || [])
 
         const vendorData = await getData("/user/vendors")
-        console.log("RAW VENDORS FROM API:", vendorData)
+        // console.log("RAW VENDORS FROM API:", vendorData)
         setVendors(vendorData?.vendors || [])
 
         const txData = await getData("/user/transactions")
         setTransactions(txData?.transactions || [])
+
+        const savedPhoto =
+          localStorage.getItem("profilePhoto")
+
+        if (savedPhoto) {
+          setProfilePhoto(savedPhoto)
+        }
 
       } catch (err) {
         console.log(err)
@@ -122,6 +131,57 @@ function UserDashboard() {
     return data
 
   }, [vendors, selectedCategory])
+
+  const handlePhotoUpload = async (e) => {
+
+    try {
+
+      const file = e.target.files[0]
+
+      if (!file) return
+
+      const formData = new FormData()
+
+      formData.append("photo", file)
+
+      const token = localStorage.getItem("token")
+
+      const res = await fetch(
+        "http://10.76.202.45:5000/api/profile/upload-photo",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        }
+      )
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        return alert(data.message || "Upload failed")
+      }
+
+      const photoUrl =
+        `http://10.76.202.45:5000/uploads/profiles/${data.photo}`
+
+      setProfilePhoto(photoUrl)
+
+      localStorage.setItem(
+        "profilePhoto",
+        photoUrl
+      )
+
+    } catch (err) {
+
+      console.log(err)
+
+      alert("Photo upload failed")
+
+    }
+
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen pb-24">
@@ -296,7 +356,7 @@ function UserDashboard() {
 
         {transactions.slice(0, 10).map((tx) => {
 
-          console.log("TX:", tx)
+          // console.log("TX:", tx)
 
 
           const myId = Number(localStorage.getItem("userId"))
@@ -530,6 +590,131 @@ function UserDashboard() {
         </div>
       )}
 
+      {/* PROFILE PANEL */}
+      {showProfile && (
+
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-end">
+
+          <div className="bg-white w-full rounded-t-3xl p-5 max-h-[90vh] overflow-y-auto">
+
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-5">
+
+              <h2 className="text-xl font-bold">
+                My Profile
+              </h2>
+
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-red-500"
+              >
+                Close
+              </button>
+
+            </div>
+
+            {/* PROFILE TOP */}
+            <div className="flex flex-col items-center text-center">
+
+              {/* PHOTO */}
+              <img
+                src={
+                  profilePhoto ||
+                  "https://i.pravatar.cc/150"
+                }
+                alt="profile"
+                className="w-24 h-24 rounded-full border-4 border-blue-500 object-cover"
+              />
+
+              <label className="text-sm text-blue-600 mt-2 cursor-pointer">
+
+                Change Photo
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handlePhotoUpload}
+                />
+
+              </label>
+
+              {/* USERNAME */}
+              <h2 className="text-xl font-bold mt-3">
+                {localStorage.getItem("username") || "User"}
+              </h2>
+
+              {/* UNIQUE ID */}
+              <p className="text-gray-500 text-sm mt-1">
+                ID: SCN-{localStorage.getItem("userId")}
+              </p>
+
+              {/* ROLE */}
+              <div className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full mt-2">
+                USER ACCOUNT
+              </div>
+
+            </div>
+
+            {/* WALLET */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-5 mt-6">
+
+              <p className="text-sm opacity-80">
+                Available Balance
+              </p>
+
+              <h1 className="text-3xl font-bold mt-2">
+                ₹ {wallet}
+              </h1>
+
+              <button className="mt-4 bg-white text-blue-700 px-4 py-2 rounded-xl font-medium">
+                Withdraw Money
+              </button>
+
+            </div>
+
+            {/* QR SECTION */}
+            <div className="bg-gray-100 rounded-3xl p-5 mt-5 text-center">
+
+              <h3 className="font-semibold mb-4">
+                My QR Code
+              </h3>
+
+              {/* SAMPLE QR */}
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=USER-${localStorage.getItem("userId")}`}
+                alt="qr"
+                className="mx-auto rounded-xl"
+              />
+
+              <p className="text-xs text-gray-500 mt-3">
+                Scan to pay this user
+              </p>
+
+            </div>
+
+            {/* SECURITY */}
+            <div className="mt-6 space-y-3">
+
+              <button className="w-full border rounded-2xl py-3 font-medium">
+                Change Password
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-500 text-white rounded-2xl py-3 font-medium"
+              >
+                Logout
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
       {/* FLOATING QR */}
       <button
         onClick={() => navigate("/scan")}
@@ -556,7 +741,12 @@ function UserDashboard() {
           Offers
         </div>
 
-        <div>Profile</div>
+        <div
+          onClick={() => setShowProfile(true)}
+          className="cursor-pointer"
+        >
+          Profile
+        </div>
 
       </div>
 

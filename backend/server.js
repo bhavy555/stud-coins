@@ -5,6 +5,7 @@ import express from "express"
 import cors from "cors"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import path from "path"
 
 import sequelize from "./config/db.js"
 import listEndpoints from "express-list-endpoints"
@@ -17,6 +18,7 @@ import adminRoutes from "./routes/adminRoutes.js"
 // ✅ ROUTES
 import userRoutes from "./routes/userRoutes.js"
 import vendorRoutes from "./routes/vendorRoutes.js"
+import profileRoutes from "./routes/profileRoutes.js"
 
 
 const app = express()
@@ -27,6 +29,11 @@ app.use(cors())
 //   credentials: true
 // }))
 app.use(express.json())
+
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "uploads"))
+)
 
 const SECRET = process.env.JWT_SECRET
 // ================= DB CONNECT =================
@@ -105,5 +112,6 @@ app.use("/api/user", userRoutes)
 app.use("/api/auth", authRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/vendor", vendorRoutes)
+app.use("/api/profile", profileRoutes)
 
 console.log(listEndpoints(app))

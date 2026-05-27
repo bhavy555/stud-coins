@@ -11,6 +11,39 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true
   },
+  profilePhoto: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  fullName: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  email: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+
+  paymentId: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   category: {
     type: DataTypes.STRING,
     allowNull: true
