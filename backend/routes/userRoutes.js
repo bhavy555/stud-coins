@@ -68,6 +68,20 @@ router.get("/transactions", auth, async (req, res) => {
           { to: userId }
         ]
       },
+
+      include: [
+        {
+          model: User,
+          as: "sender",
+          attributes: ["id", "username", "shopName"]
+        },
+        {
+          model: User,
+          as: "receiver",
+          attributes: ["id", "username", "shopName"]
+        }
+      ],
+
       order: [["createdAt", "DESC"]]
     })
 

@@ -18,6 +18,8 @@ function UserDashboard() {
   const [selectedVendor, setSelectedVendor] = useState(null)
 
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [showHistory, setShowHistory] = useState(false)
+  const [showOffers, setShowOffers] = useState(false)
 
   const handleLogout = () => {
     localStorage.clear()
@@ -60,7 +62,13 @@ function UserDashboard() {
     fetchWallet()
 
     const txData = await getData("/user/transactions")
-    setTransactions(txData.transactions || [])
+    console.log(
+      "RAW TRANSACTIONS:",
+      JSON.stringify(txData, null, 2)
+    )
+
+    setTransactions(txData?.transactions || [])
+    // setTransactions(txData.transactions || [])
   }
 
   // LOAD DATA
@@ -279,6 +287,249 @@ function UserDashboard() {
 
       </div>
 
+      {/* TRANSACTIONS */}
+      <div className="space-y-3">
+
+        <h2 className="font-semibold">
+          Recent Transactions
+        </h2>
+
+        {transactions.slice(0, 10).map((tx) => {
+
+          console.log("TX:", tx)
+
+
+          const myId = Number(localStorage.getItem("userId"))
+
+          const isSent = tx.from === myId
+
+          return (
+            <div
+              key={tx.id}
+              className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
+            >
+
+              <div>
+                <p className="font-medium">
+
+                  {isSent
+                    ? `To ${tx.receiver?.shopName || "Shop"}`
+                    : `From ${tx.sender?.username || "User"}`
+                  }
+
+                </p>
+
+                <p className="text-xs text-gray-400">
+                  {new Date(tx.createdAt).toLocaleString()}
+                </p>
+              </div>
+
+              <div
+                className={`font-semibold ${isSent
+                    ? "text-red-500"
+                    : "text-green-600"
+                  }`}
+              >
+                {isSent ? "-" : "+"} ₹{tx.amount}
+              </div>
+
+            </div>
+          )
+        })}
+
+      </div>
+
+      {/* PAYMENT HISTORY PANEL */}
+      {showHistory && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-end">
+
+          <div className="bg-white w-full rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto">
+
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-4">
+
+              <h2 className="text-lg font-semibold">
+                Payment History
+              </h2>
+
+              <button
+                onClick={() => setShowHistory(false)}
+                className="text-red-500 font-medium"
+              >
+                Close
+              </button>
+
+            </div>
+
+            {/* HISTORY */}
+            <div className="space-y-3">
+
+              {transactions.length === 0 && (
+                <div className="text-gray-400 text-center py-10">
+                  No payments found
+                </div>
+              )}
+
+              {transactions.map((tx) => {
+
+                const myId = Number(localStorage.getItem("userId"))
+                const isSent = tx.from === myId
+
+                return (
+                  <div
+                    key={tx.id}
+                    className="border rounded-2xl p-4 flex justify-between items-center"
+                  >
+
+                    <div>
+
+                      <p className="font-medium">
+                        {isSent
+                          ? `Paid to ${tx.receiver?.shopName || tx.receiver?.username || "Shop"}`
+                          : `Received from ${tx.sender?.username || "User"}`
+                        }
+                      </p>
+
+                      <p className="text-xs text-gray-400 mt-1">
+                        {new Date(tx.createdAt).toLocaleString()}
+                      </p>
+
+                    </div>
+
+                    <div
+                      className={`font-bold ${isSent
+                          ? "text-red-500"
+                          : "text-green-600"
+                        }`}
+                    >
+                      {isSent ? "-" : "+"} ₹{tx.amount}
+                    </div>
+
+                  </div>
+                )
+              })}
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* OFFERS PANEL */}
+      {showOffers && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-end">
+
+          <div className="bg-gray-100 w-full rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto">
+
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-5">
+
+              <div>
+                <h2 className="text-xl font-bold">
+                  Offers & Rewards
+                </h2>
+
+                <p className="text-sm text-gray-500">
+                  Save more on every payment
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowOffers(false)}
+                className="text-red-500 font-medium"
+              >
+                Close
+              </button>
+
+            </div>
+
+            {/* TOP BANNER */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-5 mb-5 shadow-lg">
+
+              <p className="text-sm opacity-80">
+                Special Cashback
+              </p>
+
+              <h1 className="text-3xl font-bold mt-1">
+                ₹100 Reward
+              </h1>
+
+              <p className="text-sm mt-2 opacity-90">
+                Complete 5 payments this week
+              </p>
+
+            </div>
+
+            {/* OFFERS LIST */}
+            <div className="space-y-4">
+
+              {offers.map((offer) => (
+
+                <div
+                  key={offer.id}
+                  className="bg-white rounded-3xl p-4 shadow-sm border"
+                >
+
+                  {/* TOP */}
+                  <div className="flex justify-between items-start">
+
+                    <div>
+
+                      <p className="text-lg font-semibold">
+                        {offer.title}
+                      </p>
+
+                      <p className="text-sm text-gray-500 mt-1 capitalize">
+                        {offer.category}
+                      </p>
+
+                    </div>
+
+                    {/* DISCOUNT */}
+                    <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                      {offer.discount}
+                    </div>
+
+                  </div>
+
+                  {/* GRAPHICAL BAR */}
+                  <div className="mt-4">
+
+                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+
+                      <div
+                        className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full"
+                        style={{
+                          width: `${parseInt(offer.discount) || 20}%`
+                        }}
+                      />
+
+                    </div>
+
+                    <div className="flex justify-between text-xs text-gray-400 mt-1">
+                      <span>Used 2 times</span>
+                      <span>Expires soon</span>
+                    </div>
+
+                  </div>
+
+                  {/* BUTTON */}
+                  <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-2xl font-medium">
+                    Use Offer
+                  </button>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
       {/* FLOATING QR */}
       <button
         onClick={() => navigate("/scan")}
@@ -291,8 +542,20 @@ function UserDashboard() {
       <div className="fixed bottom-0 w-full bg-white border-t flex justify-around p-3 text-xs">
 
         <div className="text-blue-700 font-semibold">Home</div>
-        <div>Pay</div>
-        <div>Offers</div>
+        <div
+          onClick={() => setShowHistory(true)}
+          className="cursor-pointer"
+        >
+          Pay
+        </div>
+
+        <div
+          onClick={() => setShowOffers(true)}
+          className="cursor-pointer"
+        >
+          Offers
+        </div>
+
         <div>Profile</div>
 
       </div>
