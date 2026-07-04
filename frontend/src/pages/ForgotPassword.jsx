@@ -12,7 +12,7 @@ function ForgotPassword() {
     const handleReset = async () => {
 
         const res = await fetch(
-            "http://10.39.241.45:5000/api/auth/forgot-password",
+            "http://10.195.203.45:5000/api/auth/forgot-password",
             {
                 method: "POST",
                 headers: {

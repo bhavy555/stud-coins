@@ -87,7 +87,7 @@ function UserDashboard() {
         if (profileData?.profilePhoto) {
 
           const imageUrl =
-            `http://10.39.241.45:5000/uploads/profiles/${profileData.profilePhoto}`
+            `http://10.195.203.45:5000/uploads/profiles/${profileData.profilePhoto}`
 
           setProfilePhoto(imageUrl)
 
@@ -166,7 +166,7 @@ function UserDashboard() {
       const token = localStorage.getItem("token")
 
       const res = await fetch(
-        "http://10.39.241.45:5000/api/profile/upload-photo",
+        "http://10.195.203.45:5000/api/profile/upload-photo",
         {
           method: "POST",
           headers: {
@@ -186,7 +186,7 @@ function UserDashboard() {
       }
 
       const photoUrl =
-        `http://10.39.241.45:5000/uploads/profiles/${data.photo}`
+        `http://10.195.203.45:5000/uploads/profiles/${data.photo}`
 
       setProfilePhoto(data.photoUrl)
 
