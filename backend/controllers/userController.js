@@ -10,78 +10,70 @@ const SECRET = "studcoin_secret"
 // ============================
 export const createUser = async (req, res) => {
     try {
-        const { username, password, role, secretKey, category, shopName } = req.body
 
-        const existing = await User.findOne({ where: { username } })
-        if (existing) {
-            return res.status(400).json({ message: "User already exists" })
-        }
-
-        if (role === "teacher" || role === "vendor") {
-            if (!secretKey) {
-                return res.status(400).json({ message: "Approval key required" })
-            }
-
-            const request = await ApprovalRequest.findOne({
-                where: {
-                    username,
-                    generatedKey: secretKey,
-                    status: "approved"
-                }
-            })
-
-            if (!request) {
-                return res.status(403).json({ message: "Invalid or expired key" })
-            }
-
-            request.status = "used"
-            await request.save()
-        }
-
-        const hashed = bcrypt.hashSync(password, 8)
-
-        const user = await User.create({
+        const {
             username,
-            password: hashed,
+            password,
+            role,
+            category,
+            shopName
+        } = req.body
+
+        const existingUser = await User.findOne({
+            where: { username }
+        })
+
+        if (existingUser) {
+            return res.status(400).json({
+                message: "Username already exists"
+            })
+        }
+
+        const existingRequest = await ApprovalRequest.findOne({
+            where: {
+                username,
+                status: "pending"
+            }
+        })
+
+        if (existingRequest) {
+            return res.status(400).json({
+                message: "Request already pending"
+            })
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 8)
+
+        await ApprovalRequest.create({
+            username,
+            password: hashedPassword,
             role,
             category: role === "vendor" ? category : null,
             shopName: role === "vendor" ? shopName : null,
-            discount: role === "vendor" ? req.body.discount || 0 : 0
+            discount: role === "vendor"
+                ? req.body.discount || 0
+                : 0,
+            status: "pending"
         })
-
-        await Wallet.create({
-            UserId: user.id,
-            balance: 0
-        })
-
-        user.qrCode = `studcoin://pay?userId=${user.id}`
-        await user.save()
-
-        await Log.create({
-            action: "USER_CREATED",
-            message: `User created: ${user.username}`,
-            createdBy: req.user?.id || user.id,
-            targetUser: user.username,
-            targetRole: user.role
-        })
-
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            SECRET,
-            { expiresIn: "1h" }
-        )
 
         return res.json({
-            message: `${role} created successfully`,
-            token,
-            role: user.role,
-            userId: user.id
+            message:
+                "Signup request submitted. Wait for admin approval."
         })
 
     } catch (err) {
-        return res.status(500).json({ error: err.message })
+
+        return res.status(500).json({
+            error: err.message
+        })
+
     }
 }
+
+// ============================
+// ✅ CREATE USER (SIGNUP)
+// ============================
+
 
 // ============================
 // ✅ GET ALL USERS

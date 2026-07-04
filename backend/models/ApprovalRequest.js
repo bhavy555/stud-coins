@@ -2,18 +2,55 @@ import { DataTypes } from "sequelize"
 import sequelize from "../config/db.js"
 
 const ApprovalRequest = sequelize.define("ApprovalRequest", {
-  username: DataTypes.STRING,
-  role: DataTypes.STRING,
-  type: DataTypes.STRING,
 
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+
+  type: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  // Signup Data
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+
+  category: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  shopName: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  discount: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+
+  // Approval Status
   status: {
     type: DataTypes.STRING,
     defaultValue: "pending"
   },
 
-  generatedKey: DataTypes.STRING,
+  generatedKey: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
 
-  // 🔐 AUDIT FIELDS
+  // Audit
   approvedBy: {
     type: DataTypes.INTEGER,
     allowNull: true
@@ -33,6 +70,7 @@ const ApprovalRequest = sequelize.define("ApprovalRequest", {
     type: DataTypes.DATE,
     allowNull: true
   }
+
 })
 
 export default ApprovalRequest

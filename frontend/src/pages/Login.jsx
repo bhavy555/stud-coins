@@ -11,7 +11,7 @@ const [password, setPassword] = useState("")
   const handleLogin = async () => {
     try {
       // const res = await fetch("http://localhost:5000/login", {
-      const res = await fetch("http://10.76.202.45:5000/login", {
+      const res = await fetch("http://10.39.241.45:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -44,6 +44,7 @@ const [password, setPassword] = useState("")
       // ✅ REDIRECT
       switch (data.role) {
         case "admin":
+          console.log("GOING TO ADMIN")
           navigate("/admin")
           break
         case "user":
@@ -56,6 +57,7 @@ const [password, setPassword] = useState("")
           navigate("/vendor")
           break
         default:
+          // console.log("ROLE RECEIVED:", data.role)
           navigate("/")
       }
 
@@ -97,6 +99,12 @@ const [password, setPassword] = useState("")
           className="w-full bg-blue-600 text-white p-2 rounded"
         >
           Login
+        </button>
+        <button
+          onClick={() => navigate("/forgot-password")}
+          className="w-full text-red-500 text-sm"
+        >
+          Forgot Password?
         </button>
         {/* ✅ SIGNUP BUTTON */}
         <button

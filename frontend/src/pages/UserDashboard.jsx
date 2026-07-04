@@ -79,6 +79,24 @@ function UserDashboard() {
       try {
         await fetchWallet()
 
+        const profileData =
+          await getData("/profile")
+
+        console.log("PROFILE:", profileData)
+
+        if (profileData?.profilePhoto) {
+
+          const imageUrl =
+            `http://10.39.241.45:5000/uploads/profiles/${profileData.profilePhoto}`
+
+          setProfilePhoto(imageUrl)
+
+          localStorage.setItem(
+            "profilePhoto",
+            imageUrl
+          )
+        }
+
         const offersData = await getData("/user/offers")
         setOffers(offersData?.offers || [])
 
@@ -133,6 +151,7 @@ function UserDashboard() {
   }, [vendors, selectedCategory])
 
   const handlePhotoUpload = async (e) => {
+    
 
     try {
 
@@ -147,7 +166,7 @@ function UserDashboard() {
       const token = localStorage.getItem("token")
 
       const res = await fetch(
-        "http://10.76.202.45:5000/api/profile/upload-photo",
+        "http://10.39.241.45:5000/api/profile/upload-photo",
         {
           method: "POST",
           headers: {
@@ -159,18 +178,21 @@ function UserDashboard() {
 
       const data = await res.json()
 
+      console.log(data)
+      console.log(data.photoUrl)
+
       if (!res.ok) {
         return alert(data.message || "Upload failed")
       }
 
       const photoUrl =
-        `http://10.76.202.45:5000/uploads/profiles/${data.photo}`
+        `http://10.39.241.45:5000/uploads/profiles/${data.photo}`
 
-      setProfilePhoto(photoUrl)
+      setProfilePhoto(data.photoUrl)
 
       localStorage.setItem(
         "profilePhoto",
-        photoUrl
+        data.photoUrl
       )
 
     } catch (err) {
@@ -183,7 +205,7 @@ function UserDashboard() {
 
   }
 
-  return (
+  return (  
     <div className="bg-gray-50 min-h-screen pb-24">
 
       {/* HEADER */}

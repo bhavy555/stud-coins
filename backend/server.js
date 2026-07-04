@@ -30,10 +30,12 @@ app.use(cors())
 // }))
 app.use(express.json())
 
-app.use(
-  "/uploads",
-  express.static(path.join(process.cwd(), "uploads"))
-)
+// app.use(
+//   "/uploads",
+//   express.static(path.join(process.cwd(), "uploads"))
+// )
+
+app.use("/uploads", express.static("uploads"))
 
 const SECRET = process.env.JWT_SECRET
 // ================= DB CONNECT =================
@@ -79,7 +81,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid password" })
     }
 
-    console.log("LOGIN SUCCESS:", user.role)
+    console.log("LOGIN SUCCESS:", user.role)/
 
     await Log.create({
       action: "LOGIN",
@@ -94,7 +96,7 @@ app.post("/login", async (req, res) => {
       SECRET,
       { expiresIn: "1h" }
     )
-
+    
     res.json({
       token,
       role: user.role,
@@ -114,4 +116,4 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/vendor", vendorRoutes)
 app.use("/api/profile", profileRoutes)
 
-console.log(listEndpoints(app))
+// console.log(listEndpoints(app))

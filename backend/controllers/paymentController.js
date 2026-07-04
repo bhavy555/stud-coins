@@ -5,6 +5,9 @@ export const payToVendor = async (req, res) => {
   try {
     const { vendorId, amount } = req.body
     const userId = req.user.id
+    const sender = await User.findByPk(req.user.id)
+    const receiver = await User.findByPk(vendorId)
+
 
     console.log("REQ.USER:", req.user)
     console.log("Payment request:", { vendorId, userId, amount })
@@ -80,7 +83,7 @@ export const payToVendor = async (req, res) => {
 
     await Log.create({
       action: "PAYMENT",
-      message: `Payment of ${amount} coins`,
+      message: `${sender.username} paid ₹${amount} to ${receiver.shopName || receiver.username}`,
       createdBy: req.user.id
     })
 

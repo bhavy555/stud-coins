@@ -23,7 +23,7 @@ function Signup() {
 
   const generatePrivateKey = async () => {
     // const res = await fetch("http://localhost:5000/api/auth/generate-key", {
-    const res = await fetch("http://10.76.202.45:5000/api/auth/generate-key", {
+    const res = await fetch("http://10.39.241.45:5000/api/auth/generate-key", {
         method: "POST",
         headers: {
         "Content-Type": "application/json"
@@ -45,7 +45,7 @@ function Signup() {
 
   const handleSignup = async () => {
     // const res = await fetch("http://localhost:5000/api/auth/signup", {
-      const res = await fetch("http://10.76.202.45:5000/api/auth/signup", {
+      const res = await fetch("http://10.39.241.45:5000/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)

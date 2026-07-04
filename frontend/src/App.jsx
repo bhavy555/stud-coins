@@ -18,6 +18,7 @@ import VendorOffers from "./pages/VendorOffers"
 import Scan from "./pages/Scan"
 import Pay from "./pages/Pay"
 import PaymentSuccess from "./pages/PaymentSuccess"
+import ForgotPassword from "./pages/ForgotPassword"
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />}/>
         <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={
           <ProtectedRoute allowedRole="admin">

@@ -56,8 +56,27 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true
   },
-  password: DataTypes.STRING,
-  role: DataTypes.STRING
+  password: {
+    type:DataTypes.STRING,
+    allowNull: false
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  resetCode: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  recoveryKey: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  recoveryQr: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+
 })
 
 
